@@ -1,0 +1,11 @@
+toml
+accelerate
+wandb
+datasets
+transformers
+nltk
+evaluate
+vec2text
+beir
+seaborn
+diffusers
