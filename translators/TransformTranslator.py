@@ -81,6 +81,12 @@ class TransformTranslator(AbsNTranslator):
         translations = {}
         reps = recons.copy()
 
+        print("IN SET")
+        print(in_set)
+
+        print("OUT SET")
+        print(out_set)
+
         for flag in in_set:
             noisy_emb = ins[flag]
             if self.training and noise_level > 0.0:
@@ -94,14 +100,16 @@ class TransformTranslator(AbsNTranslator):
                     recons[flag] = self._out_project(noisy_rep, self.out_adapters[target_flag])
                     # EXPLORANDO RECONS
                     print("RECONS")
-                    print(recons)
+                    print(recons[flag])
+                    print(recons[flag].shape)
                     input()
                 else:
                     if target_flag not in translations: translations[target_flag] = {}
                     translations[target_flag][flag] = self._out_project(noisy_rep, self.out_adapters[target_flag])
                     # EXPLORANDO TRANSLATIONS
                     print("TRANSLATIONS")
-                    print(translations)
+                    print(translations[target_flag][flag])
+                    print(translations[target_flag][flag].shape)
                     input()
 
         if include_reps:
