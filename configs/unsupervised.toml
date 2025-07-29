@@ -17,7 +17,7 @@ noise_level = 0.0
 [translator]
 style = 'res_mlp'
 norm_style = 'batch'
-depth = 3
+depth = 4
 transform_depth = 4
 d_adapter = 1024
 d_hidden = 1024
