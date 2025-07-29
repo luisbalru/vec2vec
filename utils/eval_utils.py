@@ -348,6 +348,9 @@ def eval_loop_(
     with torch.no_grad():
         for i, batch in enumerate(data_iter):
             ins = process_batch(batch, encoders, cfg.normalize_embeddings, device)
+            # EXPLORANDO BATCH
+            print(ins)
+            input()
             recons, translations = translator(ins, include_reps=False)
             
             r_res, t_res = eval_batch(ins, recons, translations)
