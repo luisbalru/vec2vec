@@ -93,12 +93,16 @@ class TransformTranslator(AbsNTranslator):
                 if target_flag == flag:
                     recons[flag] = self._out_project(noisy_rep, self.out_adapters[target_flag])
                     # EXPLORANDO RECONS
+                    print("RECONS")
                     print(recons)
+                    input()
                 else:
                     if target_flag not in translations: translations[target_flag] = {}
                     translations[target_flag][flag] = self._out_project(noisy_rep, self.out_adapters[target_flag])
                     # EXPLORANDO TRANSLATIONS
+                    print("TRANSLATIONS")
                     print(translations)
+                    input()
 
         if include_reps:
             return recons, translations, reps
