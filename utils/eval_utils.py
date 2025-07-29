@@ -349,8 +349,12 @@ def eval_loop_(
         for i, batch in enumerate(data_iter):
             ins = process_batch(batch, encoders, cfg.normalize_embeddings, device)
             # EXPLORANDO BATCH
+            # ESTOS SON LOS EMBEDDINGS GENERADOS POR LOS MODELOS QUE SE VAYAN A UTILIZAR
             print(ins)
             input()
+
+            # ESTOS SON LOS EMBEDDINGS GENERADOS POR EL TRANSLATOR
+            # ORGANIZADOS EN RECONS Y TRANSLATIONS (CON TODAS LAS COMBINACIONES DE IN Y OUT)
             recons, translations = translator(ins, include_reps=False)
             
             r_res, t_res = eval_batch(ins, recons, translations)
