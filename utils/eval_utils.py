@@ -347,11 +347,10 @@ def eval_loop_(
     text_batches = cfg.text_batches if hasattr(cfg, 'text_batches') else 0
     with torch.no_grad():
         for i, batch in enumerate(data_iter):
-            ins = process_batch(batch, encoders, cfg.normalize_embeddings, device)
             # EXPLORANDO BATCH
             # ESTOS SON LOS EMBEDDINGS GENERADOS POR LOS MODELOS QUE SE VAYAN A UTILIZAR
-            print(ins)
-            input()
+            ins = process_batch(batch, encoders, cfg.normalize_embeddings, device)
+            
 
             # ESTOS SON LOS EMBEDDINGS GENERADOS POR EL TRANSLATOR
             # ORGANIZADOS EN RECONS Y TRANSLATIONS (CON TODAS LAS COMBINACIONES DE IN Y OUT)
