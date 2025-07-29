@@ -86,7 +86,7 @@ class TransformTranslator(AbsNTranslator):
 
         print("OUT SET")
         print(out_set)
-
+        input()
         for flag in in_set:
             noisy_emb = ins[flag]
             if self.training and noise_level > 0.0:
