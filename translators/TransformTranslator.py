@@ -81,18 +81,17 @@ class TransformTranslator(AbsNTranslator):
         translations = {}
         reps = recons.copy()
 
-        print("IN SET")
-        print(in_set)
-
-        print("OUT SET")
-        print(out_set)
-        input()
         for flag in in_set:
             noisy_emb = ins[flag]
             if self.training and noise_level > 0.0:
                 noisy_emb += torch.randn_like(noisy_emb, device=noisy_emb.device) * noise_level
                 noisy_emb = noisy_emb / noisy_emb.norm(p=2, dim=1, keepdim=True) # TODO check bool
             noisy_rep = self._get_latents(noisy_emb, self.in_adapters[flag])
+            print("DE PARTIDA")
+            print(self.in_adapters[flag])
+            print(noisy_rep)
+            print(noisy_rep.shape)
+            input()
             if include_reps:
                 reps[flag] = noisy_rep
             for target_flag in out_set:
