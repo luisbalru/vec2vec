@@ -87,29 +87,15 @@ class TransformTranslator(AbsNTranslator):
                 noisy_emb += torch.randn_like(noisy_emb, device=noisy_emb.device) * noise_level
                 noisy_emb = noisy_emb / noisy_emb.norm(p=2, dim=1, keepdim=True) # TODO check bool
             noisy_rep = self._get_latents(noisy_emb, self.in_adapters[flag])
-            print("DE PARTIDA")
-            print(self.in_adapters[flag])
-            print(noisy_rep)
-            print(noisy_rep.shape)
-            input()
+
             if include_reps:
                 reps[flag] = noisy_rep
             for target_flag in out_set:
                 if target_flag == flag:
                     recons[flag] = self._out_project(noisy_rep, self.out_adapters[target_flag])
-                    # EXPLORANDO RECONS
-                    print("RECONS")
-                    print(recons[flag])
-                    print(recons[flag].shape)
-                    input()
                 else:
                     if target_flag not in translations: translations[target_flag] = {}
                     translations[target_flag][flag] = self._out_project(noisy_rep, self.out_adapters[target_flag])
-                    # EXPLORANDO TRANSLATIONS
-                    print("TRANSLATIONS")
-                    print(translations[target_flag][flag])
-                    print(translations[target_flag][flag].shape)
-                    input()
 
         if include_reps:
             return recons, translations, reps
