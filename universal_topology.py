@@ -133,7 +133,7 @@ def main():
         print("Inputs", torch.nn.functional.cosine_similarity(ins[cfg.sup_emb], ins[cfg.unsup_emb]).mean())
 
         ins_sup_array = ins[cfg.sup_emb].cpu().numpy()
-        ins_sup_array = ins_sup_array.reshape(ins_sup_array.shape[0],1, ins_sup_array.shape[1])
+        #ins_sup_array = ins_sup_array.reshape(ins_sup_array.shape[0],1, ins_sup_array.shape[1])
         ins_sup = [ins_sup_array]
         ins_unsup_array = ins[cfg.unsup_emb].cpu().numpy()
         #ins_combined = np.concatenate([ins_sup_array, ins_unsup_array], axis=0)
@@ -142,7 +142,7 @@ def main():
 
         # Second subplot - Intermediate representations
         reps_sup_array = reps[cfg.sup_emb].cpu().numpy()
-        reps_sup_array = reps_sup_array.reshape(reps_sup_array.shape[0],1, reps_sup_array.shape[1])
+        #reps_sup_array = reps_sup_array.reshape(reps_sup_array.shape[0],1, reps_sup_array.shape[1])
         reps_sup = [reps_sup_array]
         reps_unsup_array = reps[cfg.unsup_emb].cpu().numpy()
         #reps_combined = np.concatenate([reps_sup_array, reps_unsup_array], axis=0)
