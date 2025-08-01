@@ -170,6 +170,8 @@ def main():
             ]
         )
 
+        pipe.fit(ins_sup_array + reps_sup_array)
+
         plot_average_landscape(pipe.transform(ins_sup_array), 'red', 'ins sup')
         plot_average_landscape(pipe.transform(reps_sup_array), 'green', 'reps sup')
         
