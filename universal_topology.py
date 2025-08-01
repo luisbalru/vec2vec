@@ -135,7 +135,7 @@ def main():
         ins_sup_array = ins[cfg.sup_emb].cpu().numpy()
         ins_sup_array = ins_sup_array.reshape(ins_sup_array.shape[0],1, ins_sup_array.shape[1])
         ins_unsup_array = ins[cfg.unsup_emb].cpu().numpy()
-        ins_combined = np.concatenate([ins_sup_array, ins_unsup_array], axis=0)
+        #ins_combined = np.concatenate([ins_sup_array, ins_unsup_array], axis=0)
 
         
 
@@ -143,7 +143,7 @@ def main():
         reps_sup_array = reps[cfg.sup_emb].cpu().numpy()
         reps_sup_array = reps_sup_array.reshape(reps_sup_array.shape[0],1, reps_sup_array.shape[1])
         reps_unsup_array = reps[cfg.unsup_emb].cpu().numpy()
-        reps_combined = np.concatenate([reps_sup_array, reps_unsup_array], axis=0)
+        #reps_combined = np.concatenate([reps_sup_array, reps_unsup_array], axis=0)
 
         """
         point_clouds = [ins_sup_array, reps_sup_array]
