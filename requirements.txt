@@ -9,3 +9,4 @@ vec2text
 beir
 seaborn
 diffusers
+gudhi
