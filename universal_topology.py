@@ -159,12 +159,12 @@ def main():
         diagrams = rips_transformer.fit_transform(point_clouds)
         """
         # Constant for plot_average_landscape
-        landscape_resolution = 600
+        landscape_resolution = 2000
 
 
         pipe = Pipeline(
             [
-                ("rips_pers", RipsPersistence(homology_dimensions=2, n_jobs=-1)),
+                ("rips_pers", RipsPersistence(homology_dimensions=1, n_jobs=-1)),
                 ("finite_diags", DiagramSelector(use=True, point_type="finite")),
                 ("landscape", Landscape(num_landscapes=1,resolution=landscape_resolution)),
             ]
