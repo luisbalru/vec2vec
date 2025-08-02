@@ -133,6 +133,7 @@ def main():
         #ins_sup_array = ins_sup_array.reshape(ins_sup_array.shape[0],1, ins_sup_array.shape[1])
         ins_sup = [ins_sup_array]
         ins_unsup_array = ins[cfg.unsup_emb].cpu().numpy()
+        ins_unsup = [ins_unsup_array]
         #ins_combined = np.concatenate([ins_sup_array, ins_unsup_array], axis=0)
 
         
@@ -142,6 +143,7 @@ def main():
         #reps_sup_array = reps_sup_array.reshape(reps_sup_array.shape[0],1, reps_sup_array.shape[1])
         reps_sup = [reps_sup_array]
         reps_unsup_array = reps[cfg.unsup_emb].cpu().numpy()
+        reps_unsup = [reps_unsup_array]
         #reps_combined = np.concatenate([reps_sup_array, reps_unsup_array], axis=0)
 
         """
@@ -162,7 +164,7 @@ def main():
 
         pipe = Pipeline(
             [
-                ("rips_pers", RipsPersistence(homology_dimensions=10, n_jobs=-2)),
+                ("rips_pers", RipsPersistence(homology_dimensions=1, n_jobs=-2)),
                 ("finite_diags", DiagramSelector(use=True, point_type="finite")),
                 ("landscape", Landscape(num_landscapes=1,resolution=landscape_resolution)),
             ]
@@ -172,6 +174,10 @@ def main():
 
         plot_average_landscape(pipe.transform(ins_sup), 'red', 'ins sup')
         plot_average_landscape(pipe.transform(reps_sup), 'green', 'reps sup')
+        plot_average_landscape(pipe.transform(ins_unsup), 'blue', 'ins unsup')
+        plot_average_landscape(pipe.transform(reps_unsup), 'yellow', 'reps unsup')
+        
+
         
         plt.title('Average landscapes')
         plt.legend()
