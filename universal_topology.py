@@ -171,7 +171,7 @@ def main():
 
         pipe = Pipeline(
             [
-                ("rips_pers", RipsPersistence(homology_dimensions=2, n_jobs=-1)),
+                ("rips_pers", RipsPersistence(homology_dimensions=3, n_jobs=-1)),
                 ("finite_diags", DiagramSelector(use=True, point_type="finite")),
                 ("landscape", Landscape(num_landscapes=1,resolution=landscape_resolution)),
             ]
