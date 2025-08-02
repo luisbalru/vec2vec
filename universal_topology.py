@@ -136,8 +136,8 @@ def main():
         ins_sup_array = scaler.fit_transform(ins_sup_array)
         #ins_sup_array = ins_sup_array.reshape(ins_sup_array.shape[0],1, ins_sup_array.shape[1])
         ins_sup = [ins_sup_array]
-        ins_unsup_array = scaler.fit_transform(ins_unsup_array)
         ins_unsup_array = ins[cfg.unsup_emb].cpu().numpy()
+        ins_unsup_array = scaler.fit_transform(ins_unsup_array)
         ins_unsup = [ins_unsup_array]
         #ins_combined = np.concatenate([ins_sup_array, ins_unsup_array], axis=0)
 
