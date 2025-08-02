@@ -23,8 +23,10 @@ from gudhi.sklearn.rips_persistence import RipsPersistence
 from gudhi.representations import DiagramSelector, Landscape
 from sklearn.pipeline import Pipeline
 
-def plot_average_landscape(landscapes, color, label, filter):
-    landscapes = landscapes[:,:filter]
+def plot_average_landscape(landscapes, color, label):
+    lands = landscapes[0]
+    print(lands)
+    print(lands.shape)
     rng = np.random.default_rng()
     res = bootstrap((np.transpose(landscapes),), np.std, method='basic', axis=-1, confidence_level=0.95, random_state=rng)
     ci_l, ci_u = res.confidence_interval
@@ -161,8 +163,7 @@ def main():
         """
         # Constant for plot_average_landscape
         landscape_resolution = 600
-        # Nothing interesting after 0.4, you can set this filter to 1 (number of landscapes) if you want to check
-        filter = int(0.4 * landscape_resolution)
+
 
         pipe = Pipeline(
             [
@@ -174,8 +175,8 @@ def main():
 
         pipe.fit(ins_sup + reps_sup)
 
-        plot_average_landscape(pipe.transform(ins_sup), 'red', 'ins sup', filter)
-        plot_average_landscape(pipe.transform(reps_sup), 'green', 'reps sup',filter)
+        plot_average_landscape(pipe.transform(ins_sup), 'red', 'ins sup')
+        plot_average_landscape(pipe.transform(reps_sup), 'green', 'reps sup')
         
         plt.title('Average landscapes')
         plt.legend()
