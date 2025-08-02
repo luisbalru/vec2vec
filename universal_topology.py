@@ -171,7 +171,7 @@ def main():
 
         pipe = Pipeline(
             [
-                ("rips_pers", RipsPersistence(homology_dimensions=3, n_jobs=-1)),
+                ("rips_pers", RipsPersistence(homology_dimensions=0, n_jobs=-1)),
                 ("finite_diags", DiagramSelector(use=True, point_type="finite")),
                 ("landscape", Landscape(num_landscapes=1,resolution=landscape_resolution)),
             ]
@@ -180,7 +180,6 @@ def main():
         pipe.fit(ins_sup + reps_sup+ins_unsup+reps_unsup)
         #pipe.fit(ins_sup)
         # MIRAR AQUÍ PARA ENTROPY: https://github.com/GUDHI/TDA-tutorial/blob/master/Tuto-GUDHI-persistent-entropy.ipynb
-        # HAY QUE NORMALIZAR LOS DATOS. SALEN MUY DIFERENTES PORQUE LOS REPS TIENEN VALORES MUCHO MÁS ALTOS QUE LOS INS
 
         #ES = Entropy(mode='vector', sample_range=[0,1.5], resolution = 151, normalized = False)
         #ins_sup_pers = pipe.transform(ins_sup)
