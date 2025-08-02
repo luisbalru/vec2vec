@@ -20,6 +20,7 @@ from utils.model_utils import get_sentence_embedding_dimension, load_encoder
 from utils.utils import *
 from utils.streaming_utils import load_streaming_embeddings, process_batch
 from gudhi.sklearn.rips_persistence import RipsPersistence
+from gudhi.representations.vector_methods import Entropy
 from gudhi.representations import DiagramSelector, Landscape
 from sklearn.pipeline import Pipeline
 
@@ -166,13 +167,22 @@ def main():
             [
                 ("rips_pers", RipsPersistence(homology_dimensions=1, n_jobs=-1)),
                 #("finite_diags", DiagramSelector(use=True, point_type="finite")),
-                ("landscape", Landscape(num_landscapes=1,resolution=landscape_resolution)),
+                #("landscape", Landscape(num_landscapes=1,resolution=landscape_resolution)),
             ]
         )
         
         pipe.fit(ins_sup + reps_sup+ins_unsup+reps_unsup)
         #pipe.fit(ins_sup)
+        # MIRAR AQUÍ PARA ENTROPY: https://github.com/GUDHI/TDA-tutorial/blob/master/Tuto-GUDHI-persistent-entropy.ipynb
 
+        ES = Entropy(mode='vector', sample_range=[0,1.5], resolution = 151, normalized = False)
+        ins_sup_pers = pipe.transform(ins_sup)
+        reps_sup_pers = pipe.transform(reps_sup)
+
+        es_reps_sup = ES.fit_transform(reps_sup_pers)
+        print(es_reps_sup)
+
+        """
         plot_average_landscape(pipe.transform(ins_sup), 'red', 'ins sup')
         plot_average_landscape(pipe.transform(reps_sup), 'green', 'reps sup')
         plot_average_landscape(pipe.transform(ins_unsup), 'blue', 'ins unsup')
@@ -186,6 +196,7 @@ def main():
             plt.show()
         else:
             plt.savefig('prueba.pdf')
+        """
 
 if __name__ == "__main__":
     main()
