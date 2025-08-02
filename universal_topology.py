@@ -25,12 +25,7 @@ from sklearn.pipeline import Pipeline
 
 def plot_average_landscape(landscapes, color, label):
     lands = landscapes[0]
-    print(lands)
-    print(lands.shape)
-    rng = np.random.default_rng()
-    res = bootstrap((np.transpose(landscapes),), np.std, method='basic', axis=-1, confidence_level=0.95, random_state=rng)
-    ci_l, ci_u = res.confidence_interval
-    plt.fill_between(np.arange(0,filter,1), ci_l, ci_u, alpha=.3, color=color, label=label)
+    plt.scatter(np.arange(0,lands.shape[0]), lands, color=color, label=label)
 
 
 def main():
