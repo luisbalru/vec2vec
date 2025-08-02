@@ -179,7 +179,7 @@ def main():
         ins_sup_pers = pipe.transform(ins_sup)
         reps_sup_pers = pipe.transform(reps_sup)
 
-        es_reps_sup = ES.fit_transform(reps_sup_pers)
+        es_reps_sup = ES.fit_transform(ins_sup_pers)
         print(es_reps_sup)
 
         """
