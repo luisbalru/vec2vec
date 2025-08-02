@@ -170,8 +170,8 @@ def main():
             ]
         )
         
-        #pipe.fit(ins_sup + reps_sup+ins_unsup+reps_unsup)
-        pipe.fit(ins_sup)
+        pipe.fit(ins_sup + reps_sup+ins_unsup+reps_unsup)
+        #pipe.fit(ins_sup)
 
         plot_average_landscape(pipe.transform(ins_sup), 'red', 'ins sup')
         #plot_average_landscape(pipe.transform(reps_sup), 'green', 'reps sup')
