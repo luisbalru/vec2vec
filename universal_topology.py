@@ -169,13 +169,13 @@ def main():
                 ("landscape", Landscape(num_landscapes=1,resolution=landscape_resolution)),
             ]
         )
-
+        
         pipe.fit(ins_sup + reps_sup+ins_unsup+reps_unsup)
 
         plot_average_landscape(pipe.transform(ins_sup), 'red', 'ins sup')
-        plot_average_landscape(pipe.transform(reps_sup), 'green', 'reps sup')
-        plot_average_landscape(pipe.transform(ins_unsup), 'blue', 'ins unsup')
-        plot_average_landscape(pipe.transform(reps_unsup), 'yellow', 'reps unsup')
+        #plot_average_landscape(pipe.transform(reps_sup), 'green', 'reps sup')
+        #plot_average_landscape(pipe.transform(ins_unsup), 'blue', 'ins unsup')
+        #plot_average_landscape(pipe.transform(reps_unsup), 'yellow', 'reps unsup')
         
 
         
