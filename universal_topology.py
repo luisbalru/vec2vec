@@ -164,13 +164,13 @@ def main():
 
         pipe = Pipeline(
             [
-                ("rips_pers", RipsPersistence(homology_dimensions=3, n_jobs=-1)),
+                ("rips_pers", RipsPersistence(homology_dimensions=1, n_jobs=-1)),
                 ("finite_diags", DiagramSelector(use=True, point_type="finite")),
                 ("landscape", Landscape(num_landscapes=1,resolution=landscape_resolution)),
             ]
         )
 
-        pipe.fit(ins_sup + reps_sup)
+        pipe.fit(ins_sup + reps_sup+ins_unsup+reps_unsup)
 
         plot_average_landscape(pipe.transform(ins_sup), 'red', 'ins sup')
         plot_average_landscape(pipe.transform(reps_sup), 'green', 'reps sup')
