@@ -178,8 +178,8 @@ def main():
         ES = Entropy(mode='vector', sample_range=[0,1.5], resolution = 151, normalized = False)
         ins_sup_pers = pipe.transform(ins_sup)
         reps_sup_pers = pipe.transform(reps_sup)
-        print(ins_sup_pers)
-        es_reps_sup = ES.fit_transform(ins_sup_pers)
+        print(reps_sup_pers)
+        es_reps_sup = ES.fit_transform(reps_sup_pers)
         print(es_reps_sup)
 
         """
