@@ -23,6 +23,7 @@ from gudhi.sklearn.rips_persistence import RipsPersistence
 from gudhi.representations.vector_methods import Entropy
 from gudhi.representations import DiagramSelector, Landscape
 from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import MinMaxScaler
 
 def plot_average_landscape(landscapes, color, label):
     lands = landscapes[0]
@@ -118,6 +119,7 @@ def main():
     C1 = '#008080'
     C2 = '#FF6347'
     LINEWIDTH = 0.5
+    scaler = MinMaxScaler()
     with torch.no_grad():
         translator.eval()
         batch = next(iter(evalloader))
@@ -131,8 +133,10 @@ def main():
         print("Inputs", torch.nn.functional.cosine_similarity(ins[cfg.sup_emb], ins[cfg.unsup_emb]).mean())
 
         ins_sup_array = ins[cfg.sup_emb].cpu().numpy()
+        ins_sup_array = scaler.fit_transform(ins_sup_array)
         #ins_sup_array = ins_sup_array.reshape(ins_sup_array.shape[0],1, ins_sup_array.shape[1])
         ins_sup = [ins_sup_array]
+        ins_unsup_array = scaler.fit_transform(ins_unsup_array)
         ins_unsup_array = ins[cfg.unsup_emb].cpu().numpy()
         ins_unsup = [ins_unsup_array]
         #ins_combined = np.concatenate([ins_sup_array, ins_unsup_array], axis=0)
@@ -141,9 +145,11 @@ def main():
 
         # Second subplot - Intermediate representations
         reps_sup_array = reps[cfg.sup_emb].cpu().numpy()
+        reps_sup_array = scaler.fit_transform(reps_sup_array)
         #reps_sup_array = reps_sup_array.reshape(reps_sup_array.shape[0],1, reps_sup_array.shape[1])
         reps_sup = [reps_sup_array]
         reps_unsup_array = reps[cfg.unsup_emb].cpu().numpy()
+        reps_unsup_array = scaler.fit_transform(reps_unsup_array)
         reps_unsup = [reps_unsup_array]
         #reps_combined = np.concatenate([reps_sup_array, reps_unsup_array], axis=0)
 
@@ -174,15 +180,16 @@ def main():
         pipe.fit(ins_sup + reps_sup+ins_unsup+reps_unsup)
         #pipe.fit(ins_sup)
         # MIRAR AQUÍ PARA ENTROPY: https://github.com/GUDHI/TDA-tutorial/blob/master/Tuto-GUDHI-persistent-entropy.ipynb
+        # HAY QUE NORMALIZAR LOS DATOS. SALEN MUY DIFERENTES PORQUE LOS REPS TIENEN VALORES MUCHO MÁS ALTOS QUE LOS INS
 
-        ES = Entropy(mode='vector', sample_range=[0,1.5], resolution = 151, normalized = False)
-        ins_sup_pers = pipe.transform(ins_sup)
-        reps_sup_pers = pipe.transform(reps_sup)
-        print(reps_sup_pers)
-        es_reps_sup = ES.fit_transform(reps_sup_pers)
-        print(es_reps_sup)
+        #ES = Entropy(mode='vector', sample_range=[0,1.5], resolution = 151, normalized = False)
+        #ins_sup_pers = pipe.transform(ins_sup)
+        #reps_sup_pers = pipe.transform(reps_sup)
+        #print(reps_sup_pers)
+        #es_reps_sup = ES.fit_transform(reps_sup_pers)
+        #print(es_reps_sup)
 
-        """
+        
         plot_average_landscape(pipe.transform(ins_sup), 'red', 'ins sup')
         plot_average_landscape(pipe.transform(reps_sup), 'green', 'reps sup')
         plot_average_landscape(pipe.transform(ins_unsup), 'blue', 'ins unsup')
@@ -196,7 +203,7 @@ def main():
             plt.show()
         else:
             plt.savefig('prueba.pdf')
-        """
+        
 
 if __name__ == "__main__":
     main()
