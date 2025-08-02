@@ -166,7 +166,7 @@ def main():
             [
                 ("rips_pers", RipsPersistence(homology_dimensions=1, n_jobs=-1)),
                 ("finite_diags", DiagramSelector(use=True, point_type="finite")),
-                ("landscape", Landscape(num_landscapes=2,resolution=landscape_resolution)),
+                ("landscape", Landscape(num_landscapes=5,resolution=landscape_resolution)),
             ]
         )
         
