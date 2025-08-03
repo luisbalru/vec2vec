@@ -9,7 +9,6 @@ import accelerate
 import numpy as np
 import torch
 import matplotlib.pyplot as plt
-import seaborn as sns
 from sklearn.manifold import TSNE  # Use TSNE instead of PCA
 
 # from eval import eval_model
@@ -24,10 +23,16 @@ from gudhi.representations.vector_methods import Entropy
 from gudhi.representations import DiagramSelector, Landscape
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import MinMaxScaler
+import pandas as pd
+import plotly.graph_objects as go
 
-def plot_average_landscape(landscapes, color, label):
+
+def plot_average_landscape(landscapes, color, label, fig):
     lands = landscapes[0]
-    plt.scatter(np.arange(0,lands.shape[0]), lands, color=color, label=label)
+    x=np.arange(0,lands.shape[0])
+    fig.add_trace(go.Scatter(x=x, y=lands, mode='lines+markers',
+                    name=label, color=color, label=label))
+    return fig
 
 
 def main():
@@ -188,20 +193,15 @@ def main():
         #es_reps_sup = ES.fit_transform(reps_sup_pers)
         #print(es_reps_sup)
 
-        
-        plot_average_landscape(pipe.transform(ins_sup), 'red', 'ins sup')
-        plot_average_landscape(pipe.transform(reps_sup), 'green', 'reps sup')
-        plot_average_landscape(pipe.transform(ins_unsup), 'blue', 'ins unsup')
-        plot_average_landscape(pipe.transform(reps_unsup), 'yellow', 'reps unsup')
+        fig = go.Figure()
+
+        fig = plot_average_landscape(pipe.transform(ins_sup), 'red', 'ins sup', fig)
+        fig = plot_average_landscape(pipe.transform(reps_sup), 'green', 'reps sup', fig)
+        fig = plot_average_landscape(pipe.transform(ins_unsup), 'blue', 'ins unsup', fig)
+        fig = plot_average_landscape(pipe.transform(reps_unsup), 'yellow', 'reps unsup', fig)
         
 
-        
-        plt.title('Average landscapes')
-        plt.legend()
-        if no_plot == False:
-            plt.show()
-        else:
-            plt.savefig('prueba.pdf')
+        fig.write_html('prueba.pdf')
         
 
 if __name__ == "__main__":
