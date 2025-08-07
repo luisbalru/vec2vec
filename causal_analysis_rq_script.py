@@ -235,6 +235,19 @@ def main():
         print("Wasserstein distance M1-M2")
         print(gudhi.hera.wasserstein_distance(BarCodes_Rips1_d0, BarCodes_Rips2_d0))
 
+
+        complex3 = gudhi.RipsComplex(
+            distance_matrix = trans_unsup_array, 
+            max_edge_length = 0.8
+        ) 
+
+        rips_simple3 = complex3.create_simplex_tree(max_dimension = 2)
+
+        BarCodes_Rips3 = rips_simple3.persistence()
+        BarCodes_Rips3_d0 = np.array([d[1] for d in BarCodes_Rips3])
+        print("Wasserstein distance F(M1)-M2")
+        print(gudhi.hera.wasserstein_distance(BarCodes_Rips3_d0, BarCodes_Rips2_d0))
+
         """
         
 
@@ -247,7 +260,7 @@ def main():
 
     
         
-        """
+        
         # PERSISTENCE LANDSCAPE
         plot = False
         ins_sup_transf = pipe.transform(ins_sup)
@@ -267,7 +280,7 @@ def main():
         print(np.linalg.norm(ins_unsup_transf-ins_sup_transf))
         print("L2(F(M1),M2)")
         print(np.linalg.norm(trans_unsup_transf-ins_sup_transf))
-        """
+        
         
 
 if __name__ == "__main__":
