@@ -139,10 +139,12 @@ def main():
         print("Inputs", torch.nn.functional.cosine_similarity(ins[cfg.sup_emb], ins[cfg.unsup_emb]).mean())
         # VAMOS A SUPONER QUE M1 ES UNSUP Y M2 SUP. A DONDE QUEREMOS LLEGAR ES A M2
         ins_sup_array = ins[cfg.sup_emb].cpu().numpy()
+        scaler = MinMaxScaler()
         ins_sup_array = scaler.fit_transform(ins_sup_array)
         #ins_sup_array = ins_sup_array.reshape(ins_sup_array.shape[0],1, ins_sup_array.shape[1])
         ins_sup = [ins_sup_array]
         ins_unsup_array = ins[cfg.unsup_emb].cpu().numpy()
+        scaler = MinMaxScaler()
         ins_unsup_array = scaler.fit_transform(ins_unsup_array)
         ins_unsup = [ins_unsup_array]
         #ins_combined = np.concatenate([ins_sup_array, ins_unsup_array], axis=0)
@@ -160,6 +162,7 @@ def main():
         """
 
         trans_unsup_array = trans[cfg.unsup_emb][cfg.sup_emb].cpu().numpy()
+        scaler = MinMaxScaler()
         trans_unsup_array = scaler.fit_transform(trans_unsup_array)
         trans_unsup = [trans_unsup_array]
         #reps_combined = np.concatenate([reps_sup_array, reps_unsup_array], axis=0)
@@ -181,7 +184,7 @@ def main():
         
         landscape_resolution = 2000
 
-
+        """
         pipe = Pipeline(
             [
                 ("rips_pers", RipsPersistence(homology_dimensions=0, n_jobs=-1)),
@@ -189,7 +192,7 @@ def main():
                 ("landscape", Landscape(num_landscapes=1,resolution=landscape_resolution)),
             ]
         )
-        """
+        
         pipe = Pipeline(
             [
                 ("rips_pers", RipsPersistence(homology_dimensions=1, n_jobs=-1)),
@@ -208,9 +211,7 @@ def main():
         ax.set_title("Persistence diagram of gte")
         ax.set_aspect("equal")  # forces to be square shaped
         plt.savefig('pd_gte_d1.png')
-        
-
-
+        """
         # PERSISTENCE DIAGRAMS
         complex1 = gudhi.RipsComplex(
             distance_matrix = ins_unsup_array, 
@@ -220,7 +221,8 @@ def main():
         rips_simple1 = complex1.create_simplex_tree(max_dimension = 2)
 
         BarCodes_Rips1 = rips_simple1.persistence()
-        BarCodes_Rips1_d0 = np.array([d[1] for d in BarCodes_Rips1])
+        BarCodes_Rips1_d0 = np.array([d[1] for d in BarCodes_Rips1 if d[0] == 0])
+        BarCodes_Rips1_d1 = np.array([d[1] for d in BarCodes_Rips1 if d[0] == 1])
 
 
         complex2 = gudhi.RipsComplex(
@@ -231,9 +233,12 @@ def main():
         rips_simple2 = complex2.create_simplex_tree(max_dimension = 2)
 
         BarCodes_Rips2 = rips_simple2.persistence()
-        BarCodes_Rips2_d0 = np.array([d[1] for d in BarCodes_Rips2])
-        print("Wasserstein distance M1-M2")
-        print(gudhi.hera.wasserstein_distance(BarCodes_Rips1_d0, BarCodes_Rips2_d0))
+        BarCodes_Rips2_d0 = np.array([d[1] for d in BarCodes_Rips2 if d[0] == 0])
+        BarCodes_Rips2_d1 = np.array([d[1] for d in BarCodes_Rips2 if d[0] == 1])
+        print("Wasserstein distance M1-M2 d0")
+        print(gudhi.hera.wasserstein_distance(BarCodes_Rips1_d0, BarCodes_Rips2_d0, order=2))
+        print("Wasserstein distance M1-M2 d1")
+        print(gudhi.hera.wasserstein_distance(BarCodes_Rips1_d1, BarCodes_Rips2_d1, order=2))
 
 
         complex3 = gudhi.RipsComplex(
@@ -244,20 +249,13 @@ def main():
         rips_simple3 = complex3.create_simplex_tree(max_dimension = 2)
 
         BarCodes_Rips3 = rips_simple3.persistence()
-        BarCodes_Rips3_d0 = np.array([d[1] for d in BarCodes_Rips3])
-        print("Wasserstein distance F(M1)-M2")
-        print(gudhi.hera.wasserstein_distance(BarCodes_Rips3_d0, BarCodes_Rips2_d0))
-        """
+        BarCodes_Rips3_d0 = np.array([d[1] for d in BarCodes_Rips3 if d[0] == 0])
+        BarCodes_Rips3_d1 = np.array([d[1] for d in BarCodes_Rips3_d1 if d[0] == 1])
+        print("Wasserstein distance F(M1)-M2 d0")
+        print(gudhi.hera.wasserstein_distance(BarCodes_Rips3_d0, BarCodes_Rips2_d0, order=2))
+        print("Wasserstein distance F(M1)-M2 d1")
+        print(gudhi.hera.wasserstein_distance(BarCodes_Rips3_d1, BarCodes_Rips2_d1, order=2))
 
-        """
-        
-
-        
-        ax = gudhi.plot_persistence_diagram(BarCodes_Rips1)
-        ax.set_title("Persistence diagram of Translation GTE-GTR")
-        ax.set_aspect("equal")  # forces to be square shaped
-        plt.savefig('pd_trans_nuevo_d0_d1.png')
-        """
         for i in range(3):
             pipe = Pipeline(
                 [
