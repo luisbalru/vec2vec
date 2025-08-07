@@ -250,7 +250,7 @@ def main():
 
         BarCodes_Rips3 = rips_simple3.persistence()
         BarCodes_Rips3_d0 = np.array([d[1] for d in BarCodes_Rips3 if d[0] == 0])
-        BarCodes_Rips3_d1 = np.array([d[1] for d in BarCodes_Rips3_d1 if d[0] == 1])
+        BarCodes_Rips3_d1 = np.array([d[1] for d in BarCodes_Rips3 if d[0] == 1])
         print("Wasserstein distance F(M1)-M2 d0")
         print(gudhi.hera.wasserstein_distance(BarCodes_Rips3_d0, BarCodes_Rips2_d0, order=2))
         print("Wasserstein distance F(M1)-M2 d1")
