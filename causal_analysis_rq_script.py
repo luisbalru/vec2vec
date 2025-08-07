@@ -26,7 +26,7 @@ import gudhi
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import MinMaxScaler
 import pandas as pd
-import plotly.graph_objects as go
+#import plotly.graph_objects as go
 
 
 def plot_average_landscape(landscapes, color, label, fig):
@@ -267,7 +267,7 @@ def main():
         trans_unsup_transf = pipe.transform(trans_unsup)
         ins_unsup_transf = pipe.transform(ins_unsup)
         pipe.fit(ins_sup + trans_unsup+ins_unsup)
-
+        """
         if plot:
             fig = go.Figure()
 
@@ -276,6 +276,7 @@ def main():
             fig = plot_average_landscape(ins_unsup_transf, '#3DD91E', cfg.unsup_emb+': M1(di)', fig)        
 
             fig.write_html('prueba_rq2_d2.html')
+        """
         print("L2(M1,M2)")
         print(np.linalg.norm(ins_unsup_transf-ins_sup_transf))
         print("L2(F(M1),M2)")
