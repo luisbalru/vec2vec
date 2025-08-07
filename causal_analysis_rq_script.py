@@ -263,10 +263,11 @@ def main():
         
         # PERSISTENCE LANDSCAPE
         plot = False
+        pipe.fit(ins_sup + trans_unsup+ins_unsup)
         ins_sup_transf = pipe.transform(ins_sup)
         trans_unsup_transf = pipe.transform(trans_unsup)
         ins_unsup_transf = pipe.transform(ins_unsup)
-        pipe.fit(ins_sup + trans_unsup+ins_unsup)
+        
         """
         if plot:
             fig = go.Figure()
