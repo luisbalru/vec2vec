@@ -133,13 +133,13 @@ def main():
         ins = process_batch(batch, {**sup_encs, **unsup_enc}, cfg.normalize_embeddings, accelerator.device)
         recons, trans, reps = translator(ins, include_reps=True)
 
-
+        scaler = MinMaxScaler()
         reps_sup_array = reps[cfg.sup_emb].cpu().numpy()
-        reps_sup_array = scaler.fit_transform(reps_sup_array)
+        #reps_sup_array = scaler.fit_transform(reps_sup_array)
         reps_sup = [reps_sup_array]
-
+        scaler = MinMaxScaler()
         reps_unsup_array = reps[cfg.unsup_emb].cpu().numpy()
-        reps_unsup_array = scaler.fit_transform(reps_unsup_array)
+        #reps_unsup_array = scaler.fit_transform(reps_unsup_array)
         reps_unsup = [reps_unsup_array]
 
 
