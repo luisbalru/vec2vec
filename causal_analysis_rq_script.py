@@ -184,7 +184,7 @@ def main():
 
         pipe = Pipeline(
             [
-                ("rips_pers", RipsPersistence(homology_dimensions=1, n_jobs=-1)),
+                ("rips_pers", RipsPersistence(homology_dimensions=0, n_jobs=-1)),
                 ("finite_diags", DiagramSelector(use=True, point_type="finite")),
                 ("landscape", Landscape(num_landscapes=1,resolution=landscape_resolution)),
             ]
@@ -258,31 +258,38 @@ def main():
         ax.set_aspect("equal")  # forces to be square shaped
         plt.savefig('pd_trans_nuevo_d0_d1.png')
         """
+        for i in range(3):
+            pipe = Pipeline(
+                [
+                    ("rips_pers", RipsPersistence(homology_dimensions=i, n_jobs=-1)),
+                    ("finite_diags", DiagramSelector(use=True, point_type="finite")),
+                    ("landscape", Landscape(num_landscapes=1,resolution=landscape_resolution)),
+                ]
+            )
+            
+            
+            # PERSISTENCE LANDSCAPE
+            plot = False
+            pipe.fit(ins_sup + trans_unsup+ins_unsup)
+            ins_sup_transf = pipe.transform(ins_sup)
+            trans_unsup_transf = pipe.transform(trans_unsup)
+            ins_unsup_transf = pipe.transform(ins_unsup)
+            
+            """
+            if plot:
+                fig = go.Figure()
 
-    
-        
-        
-        # PERSISTENCE LANDSCAPE
-        plot = False
-        pipe.fit(ins_sup + trans_unsup+ins_unsup)
-        ins_sup_transf = pipe.transform(ins_sup)
-        trans_unsup_transf = pipe.transform(trans_unsup)
-        ins_unsup_transf = pipe.transform(ins_unsup)
-        
-        """
-        if plot:
-            fig = go.Figure()
+                fig = plot_average_landscape(ins_sup_transf, '#D9631E', cfg.sup_emb+': M2(di)', fig)
+                fig = plot_average_landscape(trans_unsup_transf, '#342BDC', 'Translation: F(M1(di))', fig)
+                fig = plot_average_landscape(ins_unsup_transf, '#3DD91E', cfg.unsup_emb+': M1(di)', fig)        
 
-            fig = plot_average_landscape(ins_sup_transf, '#D9631E', cfg.sup_emb+': M2(di)', fig)
-            fig = plot_average_landscape(trans_unsup_transf, '#342BDC', 'Translation: F(M1(di))', fig)
-            fig = plot_average_landscape(ins_unsup_transf, '#3DD91E', cfg.unsup_emb+': M1(di)', fig)        
-
-            fig.write_html('prueba_rq2_d2.html')
-        """
-        print("L2(M1,M2)")
-        print(np.linalg.norm(ins_unsup_transf-ins_sup_transf))
-        print("L2(F(M1),M2)")
-        print(np.linalg.norm(trans_unsup_transf-ins_sup_transf))
+                fig.write_html('prueba_rq2_d2.html')
+            """
+            print("HOMOLOGY DIMENSION: ", i)
+            print("L2(M1,M2)")
+            print(np.linalg.norm(ins_unsup_transf-ins_sup_transf))
+            print("L2(F(M1),M2)")
+            print(np.linalg.norm(trans_unsup_transf-ins_sup_transf))
         
         
 
