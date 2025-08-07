@@ -32,7 +32,7 @@ import plotly.graph_objects as go
 def plot_average_landscape(landscapes, color, label, fig):
     lands = landscapes[0]
     x=np.arange(0,lands.shape[0])
-    fig.add_trace(go.Scatter(x=x, y=lands, mode='lines+markers',name=label))
+    fig.add_trace(go.Scatter(x=x, y=lands, mode='lines+markers',name=label, marker=dict(color=color)))
     return fig
 
 
@@ -137,7 +137,7 @@ def main():
         print(reps[cfg.unsup_emb].shape)
         print("Latents", torch.nn.functional.cosine_similarity(reps[cfg.sup_emb], reps[cfg.unsup_emb]).mean())
         print("Inputs", torch.nn.functional.cosine_similarity(ins[cfg.sup_emb], ins[cfg.unsup_emb]).mean())
-
+        # VAMOS A SUPONER QUE M1 ES UNSUP Y M2 SUP. A DONDE QUEREMOS LLEGAR ES A M2
         ins_sup_array = ins[cfg.sup_emb].cpu().numpy()
         ins_sup_array = scaler.fit_transform(ins_sup_array)
         #ins_sup_array = ins_sup_array.reshape(ins_sup_array.shape[0],1, ins_sup_array.shape[1])
@@ -148,15 +148,20 @@ def main():
         #ins_combined = np.concatenate([ins_sup_array, ins_unsup_array], axis=0)
 
         
-
+        """
         # Second subplot - Intermediate representations
-        reps_sup_array = reps[cfg.sup_emb].cpu().numpy()
-        reps_sup_array = scaler.fit_transform(reps_sup_array)
+        print(trans)
+        input()
+        print(trans[cfg.sup_emb])
+        trans_sup_array = trans[cfg.sup_emb].cpu().numpy()
+        trans_sup_array = scaler.fit_transform(trans_sup_array)
         #reps_sup_array = reps_sup_array.reshape(reps_sup_array.shape[0],1, reps_sup_array.shape[1])
-        reps_sup = [reps_sup_array]
-        reps_unsup_array = reps[cfg.unsup_emb].cpu().numpy()
-        reps_unsup_array = scaler.fit_transform(reps_unsup_array)
-        reps_unsup = [reps_unsup_array]
+        trans_sup = [trans_sup_array]
+        """
+
+        trans_unsup_array = trans[cfg.unsup_emb][cfg.sup_emb].cpu().numpy()
+        trans_unsup_array = scaler.fit_transform(trans_unsup_array)
+        trans_unsup = [trans_unsup_array]
         #reps_combined = np.concatenate([reps_sup_array, reps_unsup_array], axis=0)
 
         """
@@ -168,10 +173,12 @@ def main():
             input_type='point cloud', 
             n_jobs=-1
         )
+        
 
         diagrams = rips_transformer.fit_transform(point_clouds)
         """
         # Constant for plot_average_landscape
+        
         landscape_resolution = 2000
 
 
@@ -182,34 +189,85 @@ def main():
                 ("landscape", Landscape(num_landscapes=1,resolution=landscape_resolution)),
             ]
         )
-        
-        pipe.fit(ins_sup + reps_sup+ins_unsup+reps_unsup)
         """
-        pipe.fit(reps_sup)
-        data_reps = pipe.transform(reps_sup)
+        pipe = Pipeline(
+            [
+                ("rips_pers", RipsPersistence(homology_dimensions=1, n_jobs=-1)),
+                #("finite_diags", DiagramSelector(use=True, point_type="finite")),
+                #("landscape", Landscape(num_landscapes=1,resolution=landscape_resolution)),
+            ]
+        )
+        pipe.fit(ins_unsup)
+        data_trans = pipe.transform(ins_unsup)
         pipe.fit(ins_sup)
         data_ins = pipe.transform(ins_sup)
-        print(pairwise_persistence_diagram_distances(data_reps, data_ins, metric='bottleneck'))
+        #print(pairwise_persistence_diagram_distances(data_trans, data_ins, metric='bottleneck'))
+
+        ax = gudhi.plot_persistence_diagram(data_ins)
+        # We can modify the title, aspect, etc.
+        ax.set_title("Persistence diagram of gte")
+        ax.set_aspect("equal")  # forces to be square shaped
+        plt.savefig('pd_gte_d1.png')
         """
-        # MIRAR AQUÍ PARA ENTROPY: https://github.com/GUDHI/TDA-tutorial/blob/master/Tuto-GUDHI-persistent-entropy.ipynb
 
-        #ES = Entropy(mode='vector', sample_range=[0,1.5], resolution = 151, normalized = False)
-        #ins_sup_pers = pipe.transform(ins_sup)
-        #reps_sup_pers = pipe.transform(reps_sup)
-        #print(reps_sup_pers)
-        #es_reps_sup = ES.fit_transform(reps_sup_pers)
-        #print(es_reps_sup)
-        
-        
-        fig = go.Figure()
 
-        fig = plot_average_landscape(pipe.transform(ins_sup), 'red', 'ins sup', fig)
-        fig = plot_average_landscape(pipe.transform(reps_sup), 'green', 'reps sup', fig)
-        fig = plot_average_landscape(pipe.transform(ins_unsup), 'blue', 'ins unsup', fig)
-        fig = plot_average_landscape(pipe.transform(reps_unsup), 'yellow', 'reps unsup', fig)
+        # PERSISTENCE DIAGRAMS
+        complex1 = gudhi.RipsComplex(
+            distance_matrix = ins_unsup_array, 
+            max_edge_length = 0.8
+        ) 
+
+        rips_simple1 = complex1.create_simplex_tree(max_dimension = 2)
+
+        BarCodes_Rips1 = rips_simple1.persistence()
+        BarCodes_Rips1_d0 = np.array([d[1] for d in BarCodes_Rips1])
+
+
+        complex2 = gudhi.RipsComplex(
+            distance_matrix = ins_sup_array, 
+            max_edge_length = 0.8
+        ) 
+
+        rips_simple2 = complex2.create_simplex_tree(max_dimension = 2)
+
+        BarCodes_Rips2 = rips_simple2.persistence()
+        BarCodes_Rips2_d0 = np.array([d[1] for d in BarCodes_Rips2])
+        print("Wasserstein distance M1-M2")
+        print(gudhi.hera.wasserstein_distance(BarCodes_Rips1_d0, BarCodes_Rips2_d0))
+
+        """
         
 
-        fig.write_html('prueba_d2.html')
+        
+        ax = gudhi.plot_persistence_diagram(BarCodes_Rips1)
+        ax.set_title("Persistence diagram of Translation GTE-GTR")
+        ax.set_aspect("equal")  # forces to be square shaped
+        plt.savefig('pd_trans_nuevo_d0_d1.png')
+        """
+
+    
+        
+        """
+        # PERSISTENCE LANDSCAPE
+        plot = False
+        ins_sup_transf = pipe.transform(ins_sup)
+        trans_unsup_transf = pipe.transform(trans_unsup)
+        ins_unsup_transf = pipe.transform(ins_unsup)
+        pipe.fit(ins_sup + trans_unsup+ins_unsup)
+
+        if plot:
+            fig = go.Figure()
+
+            fig = plot_average_landscape(ins_sup_transf, '#D9631E', cfg.sup_emb+': M2(di)', fig)
+            fig = plot_average_landscape(trans_unsup_transf, '#342BDC', 'Translation: F(M1(di))', fig)
+            fig = plot_average_landscape(ins_unsup_transf, '#3DD91E', cfg.unsup_emb+': M1(di)', fig)        
+
+            fig.write_html('prueba_rq2_d2.html')
+        print("L2(M1,M2)")
+        print(np.linalg.norm(ins_unsup_transf-ins_sup_transf))
+        print("L2(F(M1),M2)")
+        print(np.linalg.norm(trans_unsup_transf-ins_sup_transf))
+        """
         
 
 if __name__ == "__main__":
