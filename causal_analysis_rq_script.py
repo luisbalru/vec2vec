@@ -184,7 +184,7 @@ def main():
 
         pipe = Pipeline(
             [
-                ("rips_pers", RipsPersistence(homology_dimensions=2, n_jobs=-1)),
+                ("rips_pers", RipsPersistence(homology_dimensions=1, n_jobs=-1)),
                 ("finite_diags", DiagramSelector(use=True, point_type="finite")),
                 ("landscape", Landscape(num_landscapes=1,resolution=landscape_resolution)),
             ]
@@ -208,7 +208,7 @@ def main():
         ax.set_title("Persistence diagram of gte")
         ax.set_aspect("equal")  # forces to be square shaped
         plt.savefig('pd_gte_d1.png')
-        """
+        
 
 
         # PERSISTENCE DIAGRAMS
@@ -247,6 +247,7 @@ def main():
         BarCodes_Rips3_d0 = np.array([d[1] for d in BarCodes_Rips3])
         print("Wasserstein distance F(M1)-M2")
         print(gudhi.hera.wasserstein_distance(BarCodes_Rips3_d0, BarCodes_Rips2_d0))
+        """
 
         """
         
