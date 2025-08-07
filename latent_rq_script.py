@@ -173,9 +173,9 @@ def main():
         BarCodes_Rips2_d0 = np.array([d[1] for d in BarCodes_Rips2 if d[0] == 0])
         BarCodes_Rips2_d1 = np.array([d[1] for d in BarCodes_Rips2 if d[0] == 1])
         print("Wasserstein distance T(A1,A2)-T(A2,A1) D0")
-        print(gudhi.hera.wasserstein_distance(BarCodes_Rips1_d0, BarCodes_Rips2_d0))
+        print(gudhi.hera.wasserstein_distance(BarCodes_Rips1_d0, BarCodes_Rips2_d0, order=2))
         print("Wasserstein distance T(A1,A2)-T(A2,A1) D0")
-        print(gudhi.hera.wasserstein_distance(BarCodes_Rips1_d1, BarCodes_Rips2_d1))
+        print(gudhi.hera.wasserstein_distance(BarCodes_Rips1_d1, BarCodes_Rips2_d1, order=2))
 
 
 
