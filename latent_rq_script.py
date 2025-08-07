@@ -158,7 +158,8 @@ def main():
         rips_simple1 = complex1.create_simplex_tree(max_dimension = 2)
 
         BarCodes_Rips1 = rips_simple1.persistence()
-        BarCodes_Rips1_d0 = np.array([d[1] for d in BarCodes_Rips1])
+        BarCodes_Rips1_d0 = np.array([d[1] for d in BarCodes_Rips1 if d[0] == 0])
+        BarCodes_Rips1_d1 = np.array([d[1] for d in BarCodes_Rips1 if d[0] == 1])
 
 
         complex2 = gudhi.RipsComplex(
@@ -169,9 +170,12 @@ def main():
         rips_simple2 = complex2.create_simplex_tree(max_dimension = 2)
 
         BarCodes_Rips2 = rips_simple2.persistence()
-        BarCodes_Rips2_d0 = np.array([d[1] for d in BarCodes_Rips2])
-        print("Wasserstein distance T(A1,A2)-T(A2,A1)")
+        BarCodes_Rips2_d0 = np.array([d[1] for d in BarCodes_Rips2 if d[0] == 0])
+        BarCodes_Rips2_d1 = np.array([d[1] for d in BarCodes_Rips2 if d[0] == 1])
+        print("Wasserstein distance T(A1,A2)-T(A2,A1) D0")
         print(gudhi.hera.wasserstein_distance(BarCodes_Rips1_d0, BarCodes_Rips2_d0))
+        print("Wasserstein distance T(A1,A2)-T(A2,A1) D0")
+        print(gudhi.hera.wasserstein_distance(BarCodes_Rips1_d1, BarCodes_Rips2_d1))
 
 
 
